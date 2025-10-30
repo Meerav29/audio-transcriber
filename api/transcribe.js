@@ -1,3 +1,10 @@
+// Disable body parsing to receive raw audio data
+export const config = {
+    api: {
+        bodyParser: false,
+    },
+};
+
 export default async function handler(req, res) {
     // Only allow POST requests
     if (req.method !== 'POST') {
@@ -12,6 +19,13 @@ export default async function handler(req, res) {
             return res.status(500).json({ error: 'API key not configured' });
         }
 
+        // Read the raw body as a buffer
+        const chunks = [];
+        for await (const chunk of req) {
+            chunks.push(chunk);
+        }
+        const audioBuffer = Buffer.concat(chunks);
+
         // Forward the request to Deepgram
         const response = await fetch('https://api.deepgram.com/v1/listen', {
             method: 'POST',
@@ -19,7 +33,7 @@ export default async function handler(req, res) {
                 'Authorization': `Token ${apiKey}`,
                 'Content-Type': req.headers['content-type'] || 'application/octet-stream',
             },
-            body: req.body
+            body: audioBuffer
         });
 
         if (!response.ok) {
