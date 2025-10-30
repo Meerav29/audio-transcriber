@@ -1,0 +1,11 @@
+{
+  "name": "audio-transcriber",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Professional speech-to-text audio transcriber",
+  "scripts": {
+    "dev": "vercel dev"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}
